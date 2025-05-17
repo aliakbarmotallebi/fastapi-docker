@@ -1,0 +1,40 @@
+
+services:
+  fastapi:
+    build: ..
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mariadb
+    environment:
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=mysecret
+      - DB_NAME=testdb
+
+  mariadb:
+    image: mariadb:11
+    container_name: mariadb_server
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: mysecret
+      MARIADB_DATABASE: testdb
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: mysecret
+
+volumes:
+  mariadb_data:
