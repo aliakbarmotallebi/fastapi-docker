@@ -1,7 +1,9 @@
 
 services:
   fastapi:
-    build: ..
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
     container_name: fastapi_app
     ports:
       - "8000:8000"
